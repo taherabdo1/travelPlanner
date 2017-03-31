@@ -2,6 +2,7 @@ package com.crossover.techtrial.java.se.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -20,9 +21,9 @@ public class User implements Serializable {
 
 	private String password;
 
-	//bi-directional one-to-one association to Order
-	@OneToOne(mappedBy="user")
-	private Order order;
+	//bi-directional many-to-one association to Order
+	@OneToMany(mappedBy="user")
+	private List<Order> orders;
 
 	//bi-directional many-to-one association to Role
 	@ManyToOne
@@ -55,12 +56,26 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Order getOrder() {
-		return this.order;
+	public List<Order> getOrders() {
+		return this.orders;
 	}
 
-	public void setOrder(Order order) {
-		this.order = order;
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+	public Order addOrder(Order order) {
+		getOrders().add(order);
+		order.setUser(this);
+
+		return order;
+	}
+
+	public Order removeOrder(Order order) {
+		getOrders().remove(order);
+		order.setUser(null);
+
+		return order;
 	}
 
 	public Role getRole() {

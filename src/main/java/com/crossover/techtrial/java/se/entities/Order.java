@@ -26,9 +26,9 @@ public class Order implements Serializable {
 
 	private String to;
 
-	//bi-directional one-to-one association to User
-	@OneToOne
-	@JoinColumn(name="id")
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="account_id")
 	private User user;
 
 	public Order() {
