@@ -1,16 +1,20 @@
 package com.crossover.techtrial.java.se.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.util.List;
 
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.List;
 
 /**
  * The persistent class for the role database table.
  * 
  */
 @Entity
-@NamedQuery(name="Role.findAll", query="SELECT r FROM Role r")
+@NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r")
 public class Role implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -19,11 +23,17 @@ public class Role implements Serializable {
 
 	private String name;
 
-	//bi-directional many-to-one association to User
-	@OneToMany(mappedBy="role")
+	// bi-directional many-to-one association to User
+	@JsonBackReference
+	@OneToMany(mappedBy = "role")
 	private List<User> users;
 
 	public Role() {
+	}
+
+	public Role(String name) {
+		super();
+		this.name = name;
 	}
 
 	public int getId() {

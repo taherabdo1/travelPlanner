@@ -1,0 +1,31 @@
+All Available Offers 
+ 
+<table>
+	<thead>
+		<tr>
+			<th>From &nbsp;</th>
+			<th>To &nbsp;</th>
+			<th>Price &nbsp;</th>
+			<th>Currency &nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="offer in offers">
+			<td>{{offer.route.from}} &nbsp;</td>
+			<td>{{offer.route.to}} &nbsp;</td>
+			<td>{{offer.price.amount}} &nbsp;</td>
+			<td>{{offer.price.currency}} &nbsp;</td>
+			<td><button ng-click="buyTicket($index)" style="padding-left: 50px;
+				padding-right: 50px">Buy Ticket
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<button ng-click="addNote()" style="padding-left: 50px;
+				padding-right: 50px">add
+				</button>
+
+				 {{notes[0].temp}}
+				

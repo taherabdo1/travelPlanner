@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crossover.techtrial.java.se.dtos.BuyTicketsRequest;
 import com.crossover.techtrial.java.se.entities.Order;
+import com.crossover.techtrial.java.se.entities.User;
 import com.crossover.techtrial.java.se.exceptions.BadRequestException;
 import com.crossover.techtrial.java.se.services.UserService;
 
@@ -53,13 +54,25 @@ public class UserResource {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getAllPurchasedTickets", produces = "application/json")
-	public ResponseEntity<?> getAllPurchasedTickets(@RequestParam(value="accountId") String accountId) {
+	public ResponseEntity<?> getAllPurchasedTickets(
+			@RequestParam(value = "accountId") String accountId) {
 		try {
 			List<Order> tickets = userService.getTickets(accountId);
 			return new ResponseEntity<>(tickets, HttpStatus.OK);
 		} catch (IllegalStateException e) {
 			return new ResponseEntity<>("user doesn't has sessionID",
 					HttpStatus.UNAUTHORIZED);
-		} 
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/signup", consumes = "application/json")
+	public ResponseEntity<?> userSignUp(@RequestBody User user) {
+		User signedUser = userService.signUpUser(user);
+		if (signedUser != null) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(signedUser,
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

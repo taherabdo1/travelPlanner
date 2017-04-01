@@ -1,7 +1,5 @@
 package com.crossover.techtrial.java.se.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class BuyTicketsRequest {
 
 	private String accountId;

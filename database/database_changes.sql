@@ -14,8 +14,8 @@ CREATE  TABLE `crossover_db`.`orders` (
 
 	
 	--adding roles
-	INSERT INTO `crossover_db`.`role` (`name`) VALUES ('user');
-	INSERT INTO `crossover_db`.`role` (`name`) VALUES ('admin');
+	INSERT INTO `crossover_db`.`role` (`name`) VALUES ('USER');
+	INSERT INTO `crossover_db`.`role` (`name`) VALUES ('ADMIN');
 
 
 	--change "from" to "from_city" and "to" to "to_city"
@@ -25,5 +25,7 @@ CREATE  TABLE `crossover_db`.`orders` (
 	ALTER TABLE `crossover_db`.`orders` ADD COLUMN `price_amount` INT NULL  AFTER `account_id` ;
 ALTER TABLE `crossover_db`.`orders` ADD COLUMN `currency` VARCHAR(45) NULL  AFTER `price_amount` ;
 
-	
+-- add currency to the user account
+	ALTER TABLE `crossover_db`.`user` ADD COLUMN `currency` VARCHAR(45) NULL  AFTER `role_id` ;
+
 	

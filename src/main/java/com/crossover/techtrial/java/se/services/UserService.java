@@ -10,20 +10,28 @@ import javassist.NotFoundException;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.auditing.CurrentDateTimeProvider;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.crossover.techtrial.java.se.dtos.BuyTicketsRequest;
+import com.crossover.techtrial.java.se.dtos.CrossOverAccount;
+import com.crossover.techtrial.java.se.dtos.DepositRequest;
+import com.crossover.techtrial.java.se.dtos.MonetaryAmount;
 import com.crossover.techtrial.java.se.dtos.Ticket;
 import com.crossover.techtrial.java.se.dtos.Price;
 import com.crossover.techtrial.java.se.dtos.Route;
 import com.crossover.techtrial.java.se.entities.Order;
+import com.crossover.techtrial.java.se.entities.Role;
 import com.crossover.techtrial.java.se.entities.User;
 import com.crossover.techtrial.java.se.exceptions.BadRequestException;
 import com.crossover.techtrial.java.se.repositories.OrderRepository;
+import com.crossover.techtrial.java.se.repositories.RoleRepository;
 import com.crossover.techtrial.java.se.repositories.UserRepository;
 
 @Component
@@ -33,6 +41,8 @@ public class UserService {
 	UserRepository userRepository;
 	@Autowired
 	OrderRepository orderRepository;
+	@Autowired
+	RoleRepository roleRepository;
 
 	public Order buyTicket(BuyTicketsRequest buyTicketsRequest)
 			throws BadRequestException, NotFoundException {
@@ -78,7 +88,8 @@ public class UserService {
 
 	public List<Order> getTickets(String accountId) {
 		System.out.println("account Id : " + accountId);
-		List<Order> orders = (List<Order>) orderRepository.findAllForAnAccount(accountId);
+		List<Order> orders = (List<Order>) orderRepository
+				.findAllForAnAccount(accountId);
 
 		// ResponseEntity<List> response = restTemplate
 		// .getForEntity(
@@ -87,5 +98,41 @@ public class UserService {
 		// List<Ticket> orders = (List<Ticket>) response.getBody();
 		return orders;
 
+	}
+
+	public User signUpUser(User user) {
+		String requestBody = "{ \"currency\": \"" + user.getCurrency() + "\" }";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<String>(requestBody,headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		//get the accountId from CrossOver BackEnd
+		ResponseEntity<CrossOverAccount> response = restTemplate.postForEntity(
+				"https://api-forest.crossover.com/Gl63W2y/paypallets/account",
+				entity, CrossOverAccount.class);
+		CrossOverAccount crossOverAccount = response.getBody();
+		
+		//deposite 1000 for the new user
+		MonetaryAmount monetaryAmount = new MonetaryAmount();
+		monetaryAmount.setAmount(1000);
+		monetaryAmount.setCurrency(user.getCurrency());
+		
+		DepositRequest depositRequest = new DepositRequest();
+		depositRequest.setAccountId(crossOverAccount.getId());
+		depositRequest.setMonetaryAmount(monetaryAmount);
+		
+		ResponseEntity<CrossOverAccount> newAccountResponse = restTemplate.postForEntity(
+				"https://api-forest.crossover.com/Gl63W2y/paypallets/account/deposit",
+				depositRequest, CrossOverAccount.class);
+
+		user.setAccountId(crossOverAccount.getId());
+		Role role = roleRepository.findByName(user.getRole().getName());
+		user.setRole(role);
+		User savedUser = userRepository.save(user);
+		System.out.println("savedUser : " + savedUser.getEmail());
+		return savedUser;
 	}
 }

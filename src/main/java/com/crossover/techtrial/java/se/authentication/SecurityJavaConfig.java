@@ -40,7 +40,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 				.usersByUsernameQuery(
 						"select email ,password, true from user where email=?")
 				.authoritiesByUsernameQuery(
-						"select user.email , role.name from user,role where email=? and role.id = user.role");
+						"select user.email , role.name from user , role where email=? and role.id = user.role_id");
 	}
 
 	@Override
@@ -49,11 +49,16 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 		http.httpBasic()
 				.and()
 				.authorizeRequests()
+				.antMatchers("/signup")
+				.permitAll()
 				.antMatchers("/logout")
 				.authenticated()
-				.antMatchers(HttpMethod.GET, "/getAllUsers","/getUserByEmail", "/getAllOrders","/getOrderById").hasRole("admin")
-				.antMatchers(HttpMethod.POST, "/confirmComment").hasRole("user")
-				.and().formLogin().successHandler(authenticationSuccessHandler)
+				.antMatchers(HttpMethod.GET, "/getAllUsers", "/getUserByEmail",
+						"/getAllOrders", "/getOrderById","/getAllOffers")
+				.hasRole("ADMIN_ROLE")
+				.antMatchers(HttpMethod.GET, "/getAllPurchasedTickets",
+						"/getAllOffers", "/buyTicket").hasRole("USER_ROLE").and()
+				.formLogin().successHandler(authenticationSuccessHandler)
 				.failureHandler(new SimpleUrlAuthenticationFailureHandler())
 				.and().logout().and().csrf().disable();
 
@@ -68,6 +73,5 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 	public SimpleUrlAuthenticationFailureHandler myFailureHandler() {
 		return new SimpleUrlAuthenticationFailureHandler();
 	}
-
 
 }

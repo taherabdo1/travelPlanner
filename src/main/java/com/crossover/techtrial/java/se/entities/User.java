@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.List;
@@ -26,12 +27,14 @@ public class User implements Serializable {
 
 	private String password;
 
+	private String currency;
 	//bi-directional many-to-one association to Order
 	@JsonManagedReference
 	@OneToMany(mappedBy="user")
 	private List<Order> orders;
 
 	//bi-directional many-to-one association to Role
+//	@JsonManagedReference
 	@ManyToOne
 	private Role role;
 
@@ -91,5 +94,15 @@ public class User implements Serializable {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+	
+	
 
 }
