@@ -20,11 +20,11 @@ ENGINE = InnoDB;
 -- Table `crossover_db`.`user`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `crossover_db`.`user` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
+  `account_id` VARCHAR(45) NOT NULL ,
   `email` VARCHAR(100) NOT NULL ,
   `password` VARCHAR(45) NOT NULL ,
   `role_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
+  PRIMARY KEY (`account_id`) ,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
   INDEX `fk_user_role_idx` (`role_id` ASC) ,
   CONSTRAINT `fk_user_role`

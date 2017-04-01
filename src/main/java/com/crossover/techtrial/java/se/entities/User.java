@@ -1,7 +1,11 @@
 package com.crossover.techtrial.java.se.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.List;
 
 
@@ -15,13 +19,15 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	@Column(name="account_id")
+	private String accountId;
 
 	private String email;
 
 	private String password;
 
 	//bi-directional many-to-one association to Order
+	@JsonManagedReference
 	@OneToMany(mappedBy="user")
 	private List<Order> orders;
 
@@ -32,12 +38,12 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public int getId() {
-		return this.id;
+	public String getAccountId() {
+		return this.accountId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
 	}
 
 	public String getEmail() {
