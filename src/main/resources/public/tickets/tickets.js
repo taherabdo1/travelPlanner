@@ -9,7 +9,13 @@ angular.module('myApp.tickets', [ 'ngRoute' ])
 				$location.path("/offers");
 			}
 			$scope.getAllTickets = function() {
-
+				if (!$rootScope.isUser) {
+					if (!$rootScope.isAdmin) {
+						$location.path("/login");
+					} else {
+						$location.path("/users");
+					}
+				}
 				$http.get("http://localhost:8080/getAllPurchasedTickets")
 						.success(function(response) {
 							$scope.tickets = response;

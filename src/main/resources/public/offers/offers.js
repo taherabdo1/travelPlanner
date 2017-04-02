@@ -10,6 +10,13 @@ angular.module('myApp.offers', [ 'ngRoute' ])
 				PDF : false
 			};
 			$scope.getAllOffers = function() {
+				if (!$rootScope.isUser) {
+					if (!$rootScope.isAdmin) {
+						$location.path("/login");
+					} else {
+						$location.path("/users");
+					}
+				}
 				$http.get("http://localhost:8080/getAllOffers").success(
 						function(response) {
 							$scope.offers = response;
@@ -51,9 +58,6 @@ angular.module('myApp.offers', [ 'ngRoute' ])
 				$http.post("http://localhost:8080/buyTicket", data).success(
 						function(response) {
 							if ($scope.checkboxModel.PDF == true) {
-								// Default export is a4 paper, portrait, using
-								// milimeters for
-								// units
 								var doc = new jsPDF()
 								var ticketDetails = "From: "
 										+ response.route.from + " \n To: "
@@ -66,6 +70,7 @@ angular.module('myApp.offers', [ 'ngRoute' ])
 								doc.text(ticketDetails, 10, 10)
 								doc.save('ticketDetails.pdf')
 							}
+							$location.path("/tickets");
 							$log.log(response);
 						}).error(function(error, status) {
 					$log.log("error");

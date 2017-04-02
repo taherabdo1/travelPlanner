@@ -76,4 +76,12 @@ public class UserResource {
 		List<User> users = userService.getUsers();
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/getUserRole", produces = "application/json")
+	public ResponseEntity<?> getUSerRole(Principal principal) {
+		User user = userService.getUserRole(principal.getName());
+		System.out.println("user email from getUserRole: " + user.getEmail());
+		return new ResponseEntity<>(user.getRole(), HttpStatus.OK);
+	}
+	
 }

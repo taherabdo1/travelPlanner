@@ -5,6 +5,13 @@ angular
 				'SignupCtrl',
 				function($scope, $rootScope, $location, $location, $http, $log) {
 
+					$scope.isLoggedIn = function(){
+						if ($rootScope.isAdmin) {
+							$location.path("/users");
+						} else if ($rootScope.isUser) {
+							$location.path("/offers");
+						}
+					};
 					$scope.signup = function() {
 
 						signupRequest = {
@@ -28,4 +35,5 @@ angular
 											$scope.errorMessage = "Something went wrong";
 										});
 					};
+					$scope.isLoggedIn();
 				});

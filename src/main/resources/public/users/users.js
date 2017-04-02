@@ -6,6 +6,13 @@ angular.module('myApp.users', [ 'ngRoute' ])
 
 			$scope.users = [];
 			$scope.getAllUsers = function() {
+				if (!$rootScope.isAdmin) {
+					if(!$rootScope.isUser){
+						$location.path("/login");						
+					}else{
+						$location.path("/offers");						
+					}
+				}
 				$http.get("http://localhost:8080/getAllUsersForAdmin").success(
 						function(response) {
 							$scope.users = response;

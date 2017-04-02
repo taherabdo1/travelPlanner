@@ -127,4 +127,9 @@ public class UserService {
 		return users;
 
 	}
+	public User getUserRole(String email) {
+		User user = userRepository.findByEmail(email);
+		return user;
+
+	}
 }

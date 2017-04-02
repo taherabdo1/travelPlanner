@@ -21,9 +21,31 @@
 </head>
 <body>
 	<ul class="menu">
-		<li><a href="#!/signup">signup</a></li>
-		<li><a href="#!/login">login</a></li>
+		<div ng-show='!isAdmin && !isUser'>
+			<li style="float: left; padding: 10px 30px 10px 40px;"><a
+				href="#!/signup">Signup</a></li>
+			<li style="float: left; padding: 10px 30px 10px 40px;"><a
+				href="#!/login">Login</a></li>
+		</div>
+		<div ng-show='isAdmin'>
+			<li style="float: left; padding: 10px 30px 10px 40px;"><a
+				href="#!/users">Users</a></li>
+			<li style="float: left; padding: 10px 30px 10px 40px;"><a
+				href="#!/orders">Orders</a></li>
+		</div>
+		<div ng-show='isUser'>
+			<li style="float: left; padding: 10px 30px 10px 40px;"><a
+				href="#!/tickets">Purchased Tickets</a></li>
+		</div>
+		<div ng-controller="LoginCtrl" ng-show='isAdmin || isUser'>
+			<li style="float: right; padding: 10px 30px 10px 40px;">
+				<button id="btn-login" class="btn btn-success" ng-click="logout()">Logout
+				</button> 
+			</li>
+		</div>
+
 	</ul>
+	<br />
 	<!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
@@ -48,7 +70,8 @@
 	<script src="orders/orders.js"></script>
 	<script src="users/users.js"></script>
 	<script src="tickets/tickets.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.debug.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.debug.js"></script>
 	<script src="components/version/version.js"></script>
 	<script src="components/version/version-directive.js"></script>
 	<script src="components/version/interpolate-filter.js"></script>

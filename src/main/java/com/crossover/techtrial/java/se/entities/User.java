@@ -42,6 +42,18 @@ public class User implements Serializable {
 
 	public User() {
 	}
+	
+	
+
+	public User(String accountId, String email, String password, Role role) {
+		super();
+		this.accountId = accountId;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+	}
+
+
 
 	public String getAccountId() {
 		return this.accountId;

@@ -6,6 +6,13 @@ angular.module('myApp.orders', [ 'ngRoute' ])
 
 			$scope.orders = [];
 			$scope.getAllOffers = function() {
+				if (!$rootScope.isAdmin) {
+					if(!$rootScope.isUser){
+						$location.path("/login");						
+					}else{
+						$location.path("/offers");						
+					}
+				}
 				$http.get("http://localhost:8080/getAllOrdersForAdmin").success(
 						function(response) {
 							$scope.orders = response;
