@@ -1,9 +1,11 @@
 package com.crossover.techtrial.java.se.resources;
 
+import java.security.Principal;
 import java.util.List;
 
 import javassist.NotFoundException;
 
+import javax.mail.SendFailedException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.crossover.techtrial.java.se.entities.Order;
 import com.crossover.techtrial.java.se.entities.User;
 import com.crossover.techtrial.java.se.exceptions.BadRequestException;
 import com.crossover.techtrial.java.se.services.UserService;
+import com.crossover.techtrial.java.se.util.SendMail;
 
 @RestController
 public class UserResource {
@@ -31,33 +34,25 @@ public class UserResource {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST, value = "/buyTicket", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<?> buyTicket(
+	public ResponseEntity<?> buyTicket(Principal principal,
 			@RequestBody BuyTicketsRequest buyTicketsRequest) {
-		// to be activated after adding login
-		// buyTicketsRequest.setAccountId((String)httpSession.getAttribute("accountId"));
 		try {
-			Order newOrder = userService.buyTicket(buyTicketsRequest);
-			try {
-				List<Order> tickets = (List<Order>) httpSession
-						.getAttribute("purchaseTickets");
-				tickets.add(newOrder);
-			} catch (IllegalStateException e) {
-				return new ResponseEntity<>("user doesn't has sessionID",
-						HttpStatus.UNAUTHORIZED);
-			}
+			Order newOrder = userService.buyTicket(buyTicketsRequest,
+					principal.getName());
+			SendMail.sendOrderMail(newOrder);
 			return new ResponseEntity<>(newOrder, HttpStatus.OK);
 		} catch (BadRequestException b) {
 			return new ResponseEntity<>(b.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (NotFoundException nf) {
-			return new ResponseEntity<>(nf.getMessage(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(nf.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getAllPurchasedTickets", produces = "application/json")
-	public ResponseEntity<?> getAllPurchasedTickets(
-			@RequestParam(value = "accountId") String accountId) {
+	public ResponseEntity<?> getAllPurchasedTickets(Principal principal) {
 		try {
-			List<Order> tickets = userService.getTickets(accountId);
+
+			List<Order> tickets = userService.getTickets(principal.getName());
 			return new ResponseEntity<>(tickets, HttpStatus.OK);
 		} catch (IllegalStateException e) {
 			return new ResponseEntity<>("user doesn't has sessionID",
@@ -74,5 +69,11 @@ public class UserResource {
 			return new ResponseEntity<>(signedUser,
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getAllUsersForAdmin", produces = "application/json")
+	public ResponseEntity<?> getAllUsersForAdmin() {
+		List<User> users = userService.getUsers();
+		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 }

@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.crossover.techtrial.java.se.dtos.BuyTicketsRequest;
@@ -44,24 +45,21 @@ public class UserService {
 	@Autowired
 	RoleRepository roleRepository;
 
-	public Order buyTicket(BuyTicketsRequest buyTicketsRequest)
+	public Order buyTicket(BuyTicketsRequest buyTicketsRequest, String userEmail)
 			throws BadRequestException, NotFoundException {
 		System.out.println("the order from service layer is: "
 				+ buyTicketsRequest.getAccountId());
-		User user = userRepository.findByAccountId("wew");
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<Ticket> response = restTemplate
-				.postForEntity(
-						"https://api-forest.crossover.com/Gl63W2y/gammaairlines/tickets/buy",
-						buyTicketsRequest, Ticket.class);
-		Ticket orderFromCrossOverAPI = response.getBody();
-		System.out.println("order from crossover amount: "
-				+ orderFromCrossOverAPI.getAmount());
-		// CrossOverOrder orderFromCrossOverAPI = restTemplate
-		// .postForObject(
-		// "https://api-forest.crossover.com/Gl63W2y/gammaairlines/tickets/buy",
-		// buyTicketsRequest, CrossOverOrder.class);
-		if (response.getStatusCode().value() == 200) {
+		try {
+			User user = userRepository.findByEmail(userEmail);
+			buyTicketsRequest.setAccountId(user.getAccountId());
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<Ticket> response = restTemplate
+					.postForEntity(
+							"https://api-forest.crossover.com/Gl63W2y/gammaairlines/tickets/buy",
+							buyTicketsRequest, Ticket.class);
+			Ticket orderFromCrossOverAPI = response.getBody();
+			System.out.println("order from crossover amount: "
+					+ orderFromCrossOverAPI.getAmount());
 			Order order = new Order();
 			order.setAmount(orderFromCrossOverAPI.getAmount());
 			order.setIsDone(true);
@@ -73,60 +71,49 @@ public class UserService {
 					.getDetails().getPrice().getAmount()));
 			order.setUser(user);
 			orderRepository.save(order);
-			// add the new order to the orders in the session to used if user
-			// asked for report
 			return order;
-		} else if (response.getStatusCode().value() == 400) {
-			throw new BadRequestException(
-					"Amount not valid or insufficient funds in your account");
-		} else if (response.getStatusCode().value() == 404) {
-			throw new NotFoundException(
-					"Applicant, airline route or account not found");
+		} catch (HttpClientErrorException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public List<Order> getTickets(String accountId) {
-		System.out.println("account Id : " + accountId);
+	public List<Order> getTickets(String email) {
+		User user = userRepository.findByEmail(email);
 		List<Order> orders = (List<Order>) orderRepository
-				.findAllForAnAccount(accountId);
-
-		// ResponseEntity<List> response = restTemplate
-		// .getForEntity(
-		// "https://api-forest.crossover.com/Gl63W2y/gammaairlines/tickets",
-		// List.class, vars);
-		// List<Ticket> orders = (List<Ticket>) response.getBody();
+				.findAllForAnAccount(user.getAccountId());
 		return orders;
 
 	}
 
 	public User signUpUser(User user) {
 		String requestBody = "{ \"currency\": \"" + user.getCurrency() + "\" }";
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<String>(requestBody,headers);
+		HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
 
-		//get the accountId from CrossOver BackEnd
+		// get the accountId from CrossOver BackEnd
 		ResponseEntity<CrossOverAccount> response = restTemplate.postForEntity(
 				"https://api-forest.crossover.com/Gl63W2y/paypallets/account",
 				entity, CrossOverAccount.class);
 		CrossOverAccount crossOverAccount = response.getBody();
-		
-		//deposite 1000 for the new user
+
+		// deposite 1000 for the new user
 		MonetaryAmount monetaryAmount = new MonetaryAmount();
 		monetaryAmount.setAmount(1000);
-		monetaryAmount.setCurrency(user.getCurrency());
-		
+		monetaryAmount.setCurrency(user.getCurrency().toString());
+
 		DepositRequest depositRequest = new DepositRequest();
 		depositRequest.setAccountId(crossOverAccount.getId());
 		depositRequest.setMonetaryAmount(monetaryAmount);
-		
-		ResponseEntity<CrossOverAccount> newAccountResponse = restTemplate.postForEntity(
-				"https://api-forest.crossover.com/Gl63W2y/paypallets/account/deposit",
-				depositRequest, CrossOverAccount.class);
+
+		ResponseEntity<CrossOverAccount> newAccountResponse = restTemplate
+				.postForEntity(
+						"https://api-forest.crossover.com/Gl63W2y/paypallets/account/deposit",
+						depositRequest, CrossOverAccount.class);
 
 		user.setAccountId(crossOverAccount.getId());
 		Role role = roleRepository.findByName(user.getRole().getName());
@@ -134,5 +121,10 @@ public class UserService {
 		User savedUser = userRepository.save(user);
 		System.out.println("savedUser : " + savedUser.getEmail());
 		return savedUser;
+	}
+	public List<User> getUsers() {
+		List<User> users = (List<User>) userRepository.findAll();
+		return users;
+
 	}
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.crossover.techtrial.java.se.dtos.Price.Currency;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -27,9 +28,10 @@ public class User implements Serializable {
 
 	private String password;
 
-	private String currency;
+	@Column(name = "currency")
+	private Currency currency;
 	//bi-directional many-to-one association to Order
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToMany(mappedBy="user")
 	private List<Order> orders;
 
@@ -95,11 +97,11 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-	public String getCurrency() {
+	public Currency getCurrency() {
 		return currency;
 	}
 
-	public void setCurrency(String currency) {
+	public void setCurrency(Currency currency) {
 		this.currency = currency;
 	}
 	

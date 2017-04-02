@@ -14,5 +14,8 @@ import com.crossover.techtrial.java.se.entities.User;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
 	@Query("Select u  From User u where u.accountId =:accountId")
-	User findByAccountId(@Param("accountId")String accountId);
+	User findByAccountId(@Param("accountId") String accountId);
+
+	@Query("Select u  From User u where u.email =:email")
+	User findByEmail(@Param("email") String email);
 }

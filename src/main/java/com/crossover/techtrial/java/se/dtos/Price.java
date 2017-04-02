@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 public class Price {
 	
 	public static enum Currency {
-		USD, EUR
+		USD, EUR, AUD, AED
 	}
 	@Column(name = "currency")
 	private Currency currency;

@@ -51,14 +51,16 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/signup")
 				.permitAll()
-				.antMatchers("/logout")
+				.antMatchers("/logout", "/getAllOffers", "/buyTicket",
+						"/getAllPurchasedTickets", "/getAllOrdersForAdmin",
+						"/getAllUsersForAdmin")
 				.authenticated()
-				.antMatchers(HttpMethod.GET, "/getAllUsers", "/getUserByEmail",
-						"/getAllOrders", "/getOrderById","/getAllOffers")
+				.antMatchers(HttpMethod.GET, "/getAllUsersForAdmin",
+						"/getAllOrdersForAdmin")
 				.hasRole("ADMIN_ROLE")
 				.antMatchers(HttpMethod.GET, "/getAllPurchasedTickets",
-						"/getAllOffers", "/buyTicket").hasRole("USER_ROLE").and()
-				.formLogin().successHandler(authenticationSuccessHandler)
+						"/getAllOffers", "/buyTicket").hasRole("USER_ROLE")
+				.and().formLogin().successHandler(authenticationSuccessHandler)
 				.failureHandler(new SimpleUrlAuthenticationFailureHandler())
 				.and().logout().and().csrf().disable();
 

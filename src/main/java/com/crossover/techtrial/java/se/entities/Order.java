@@ -7,6 +7,7 @@ import javax.persistence.*;
 import com.crossover.techtrial.java.se.dtos.Price;
 import com.crossover.techtrial.java.se.dtos.Route;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * The persistent class for the orders database table.
@@ -41,7 +42,7 @@ public class Order implements Serializable {
 //	private String to;
 
 	// bi-directional many-to-one association to User
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "account_id")
 	private User user;

@@ -1,0 +1,26 @@
+All Users in the System
+
+<label>Search: <input ng-model="searchText"></label>
+ 
+<table>
+	<thead>
+		<tr>
+			<th>Accoun ID &nbsp;</th>
+			<th>Email &nbsp;</th>
+			<th>Role &nbsp;</th>
+			<th>Currency &nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="user in users | filter : searchText">
+			<td>{{user.accountId}} &nbsp;</td>
+			<td>{{user.email}} &nbsp;</td>
+			<td>{{user.role.name}} &nbsp;</td>
+			<td>{{user.currency}} &nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<button ng-click="showOffers()" style="padding-left: 50px;
+				padding-right: 50px">All Offers
+				</button>				

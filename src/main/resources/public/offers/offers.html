@@ -1,5 +1,14 @@
 All Available Offers 
- 
+<br/>
+Get the Summery Using
+<label> BY MAIL  <input type="checkbox"
+	ng-model="checkboxModel.MAIL">
+</label>
+&nbsp;
+
+<label>BY PDF  <input type="checkbox"
+	ng-model="checkboxModel.PDF">
+</label>
 <table>
 	<thead>
 		<tr>
@@ -15,17 +24,15 @@ All Available Offers
 			<td>{{offer.route.to}} &nbsp;</td>
 			<td>{{offer.price.amount}} &nbsp;</td>
 			<td>{{offer.price.currency}} &nbsp;</td>
-			<td><button ng-click="buyTicket($index)" style="padding-left: 50px;
-				padding-right: 50px">Buy Ticket
-				</button>
-			</td>
+
+			<td><button ng-click="buyTicket($index)"
+					style="padding-left: 50px; padding-right: 50px">Buy Ticket
+				</button></td>
 		</tr>
 	</tbody>
 </table>
 
-<button ng-click="addNote()" style="padding-left: 50px;
-				padding-right: 50px">add
-				</button>
+<button ng-click="addNote()"
+	style="padding-left: 50px; padding-right: 50px">add</button>
 
-				 {{notes[0].temp}}
-				
+{{notes[0].temp}}

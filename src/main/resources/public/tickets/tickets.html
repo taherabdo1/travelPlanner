@@ -1,0 +1,29 @@
+You purchased this tickets
+ 
+<table>
+	<thead>
+		<tr>
+			<th>From &nbsp;</th>
+			<th>To &nbsp;</th>
+			<th>amount &nbsp;</th>
+			<th>Price &nbsp;</th>
+			<th>Currency &nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="ticket in tickets">
+			<td>{{ticket.route.from}} &nbsp;</td>
+			<td>{{ticket.route.to}} &nbsp;</td>
+			<td>{{ticket.amount}} &nbsp;</td>
+			<td>{{ticket.price.amount}} &nbsp;</td>
+			<td>{{ticket.price.currency}} &nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<button ng-click="showOffers()" style="padding-left: 50px;
+				padding-right: 50px">All Offers
+				</button>
+
+				 {{notes[0].temp}}
+				
