@@ -116,7 +116,7 @@ public class UserService {
 						depositRequest, CrossOverAccount.class);
 
 		user.setAccountId(crossOverAccount.getId());
-		Role role = roleRepository.findByName(user.getRole().getName());
+		Role role = roleRepository.findByName("ROLE_USER_ROLE");
 		user.setRole(role);
 		User savedUser = userRepository.save(user);
 		System.out.println("savedUser : " + savedUser.getEmail());

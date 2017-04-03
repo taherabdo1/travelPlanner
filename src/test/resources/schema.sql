@@ -1,3 +1,5 @@
+DROP TABLE  IF EXISTS `orders`;
+DROP TABLE IF EXISTS `user`;
 
 DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -27,10 +29,9 @@ CREATE TABLE `user` (
 
 
 
-DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `orders` (
+CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `amount` int(11) NOT NULL,
   `from_city` varchar(80) NOT NULL,
@@ -40,7 +41,7 @@ CREATE TABLE `orders` (
   `is_done` tinyint(4) DEFAULT NULL,
   `account_id` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `account_id` FOREIGN KEY (`account_id`) REFERENCES `user` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `account_id` FOREIGN KEY (`account_id`) REFERENCES `user` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 

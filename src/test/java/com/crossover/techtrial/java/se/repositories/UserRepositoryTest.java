@@ -1,6 +1,8 @@
 package com.crossover.techtrial.java.se.repositories;
 
 import static org.junit.Assert.*;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +22,23 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository repository;
 
+    Role persistedRole = null;
+    @Before
+    public void init(){
+    	Role role = new Role();
+    	role.setName("moderator");
+    	persistedRole = entityManager.persist(role);
+    	
+    }
     @Test
     public void findByEmailTest() {
-    	Role role = new Role();
-    	role.setId(1);
-        entityManager.persist(new User("qwerwew23","hossam@gmail.com", "12345678", role));
+        entityManager.persist(new User("qwerwew23","hossam@gmail.com", "12345678", persistedRole));
         User user = this.repository.findByEmail("hossam@gmail.com");
         assertEquals(user.getEmail(), "hossam@gmail.com");
     }
     @Test
     public void findByAccountIdTest() {
-    	Role role = new Role();
-    	role.setId(1);
-        entityManager.persist(new User("qwerwew23","hossam@gmail.com", "12345678", role));
+        entityManager.persist(new User("qwerwew23","hossam@gmail.com", "12345678", persistedRole));
         User user = this.repository.findByAccountId("qwerwew23");
         assertEquals(user.getEmail(), "hossam@gmail.com");
     }

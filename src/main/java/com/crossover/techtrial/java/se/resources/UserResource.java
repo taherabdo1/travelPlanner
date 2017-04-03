@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.crossover.techtrial.java.se.dtos.BuyTicketsRequest;
@@ -60,7 +59,7 @@ public class UserResource {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/signup", consumes = "application/json")
+	@RequestMapping(method = RequestMethod.POST, value = "/userSignup", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> userSignUp(@RequestBody User user) {
 		User signedUser = userService.signUpUser(user);
 		if (signedUser != null) {
@@ -76,12 +75,12 @@ public class UserResource {
 		List<User> users = userService.getUsers();
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/getUserRole", produces = "application/json")
 	public ResponseEntity<?> getUSerRole(Principal principal) {
 		User user = userService.getUserRole(principal.getName());
 		System.out.println("user email from getUserRole: " + user.getEmail());
 		return new ResponseEntity<>(user.getRole(), HttpStatus.OK);
 	}
-	
+
 }

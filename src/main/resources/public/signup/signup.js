@@ -13,7 +13,11 @@ angular
 						}
 					};
 					$scope.signup = function() {
-
+						var config = {
+				                headers : {
+				                    'Content-Type': 'application/json;'
+				                }
+				            }
 						signupRequest = {
 							"email" : $scope.email,
 							"password" : $scope.password,
@@ -22,8 +26,8 @@ angular
 							"accountId" : ""
 						};
 						$http
-								.post("http://localhost:8080/signup",
-										signupRequest)
+								.post("http://localhost:8080/userSignup",
+										signupRequest, config)
 								.success(
 										function(response) {
 											$scope.successMessage = "User has been created successfully";

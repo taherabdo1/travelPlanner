@@ -49,7 +49,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 		http.httpBasic()
 				.and()
 				.authorizeRequests()
-				.antMatchers("/signup")
+				.antMatchers("/userSignup")
 				.permitAll()
 				.antMatchers("/logout", "/getUserRole")
 				.authenticated()
