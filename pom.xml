@@ -19,6 +19,8 @@
 	</parent>
 
 	<properties>
+		<commons.io.version>2.4</commons.io.version>
+        <jjwt.version>0.7.0</jjwt.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
@@ -61,6 +63,16 @@
 			<version>1.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons.io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jjwt.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
